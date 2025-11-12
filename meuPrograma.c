@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <complex.h>
 #include <math.h>
 
-#define MAX_LINES 100
 
 struct myFile {
-    char *lines[MAX_LINES];
-    int tam;
+    float a;
+    float b;
+    float c;
     int status;
 };
 
@@ -21,10 +22,7 @@ struct myFile fileHandler();
 
 int main() {
     
-    int a, b, c;
-    
     struct myFile input = fileHandler();
-    calculaRaizV2(input);
 
     return 0;
 }
@@ -43,7 +41,9 @@ void calculaRaiz(int a, int b, int c) {
 
     if(delta < 0) {
         printf("Não existe raiz real para esses dados.\n");
-        printf("delta = %d\n", delta);
+        double complex deltaComplexo = pow(b,2) - 4 * a * c * I;
+        printf("delta complexaaaao = %lf*I", creal(deltaComplexo));
+        printf("deltaa = %d\n", delta);
         return;
     }
 
@@ -61,18 +61,8 @@ void calculaRaiz(int a, int b, int c) {
     return;
 }
 
-void calculaRaizV2(struct myFile input) {
-
-
-    for(int i = 0; i < input.tam; i++) {
-        float a, b, c;
-        sscanf(input.lines[i], "%f %f %f\n", &a, &b, &c);
-        calculaRaizFloat(a, b, c);
-    }
-}
-
 struct myFile fileHandler() {
-    const char *filepath = "C:\\Users\\CARLOS.MAXIMIANO\\Documents\\trabalhosAva\\trabalhoLP1\\TrabalhoLp1\\input.txt";
+    const char *filepath = "/home/ime/TrabalhoLp1/TrabalhoLp1/input.txt";
     struct myFile myFile;
     myFile.status = 0;
     FILE *fptr;
@@ -90,15 +80,13 @@ struct myFile fileHandler() {
         return myFile;
     }
 
-    while (fgets(buffer, sizeof(buffer), fptr) != NULL && i < MAX_LINES) {
-        myFile.lines[i] = malloc(strlen(buffer) + 1);
-        strcpy(myFile.lines[i], buffer);
-        i++;
-        myFile.tam = i;
+    while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
+        sscanf(buffer,"%f%f%f", &myFile.a, &myFile.b, &myFile.c);
+        calculaRaizFloat(myFile.a, myFile.b, myFile.c);
     }
 
     fclose(fptr);
-    
+
     return myFile;
 }
 
@@ -111,14 +99,20 @@ void calculaRaizFloat(float a, float b, float c) {
 
     printf("\nDados sendo computados A = %.2f; B = %.2f; C = %.2f\n", a, b, c);
     
-    int delta;
+    float delta;
     float x1, x2;
 
     delta = pow(b,2) - 4.0 * a * c;
 
     if(delta < 0) {
         printf("\nNão existe raiz real para esses dados.\n");
-        printf("delta = %d\n", delta);
+        double complex deltaComplexo = csqrt(pow(b,2) - 4 * a * c);
+
+        float complex cx1 = (-b + deltaComplexo) / (2 * a);
+        float complex cx2 = (-b - deltaComplexo) / (2 * a);
+
+        printf("\nPrimeira raiz complexa: real(%.2f) imaginaria(%.2f)\nSegunda raiz complexa: real(%.2f) imaginaria(%.2f)\n", creal(cx1), cimag(cx1),creal(cx2), cimag(cx2));
+
         return;
     }
 
