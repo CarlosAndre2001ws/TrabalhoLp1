@@ -62,7 +62,7 @@ void calculaRaiz(int a, int b, int c) {
 }
 
 struct myFile fileHandler() {
-    const char *filepath = "/home/ime/TrabalhoLp1/TrabalhoLp1/input.txt";
+    const char *filepath = "input.txt";
     struct myFile myFile;
     myFile.status = 0;
     FILE *fptr;
