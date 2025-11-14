@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <complex.h>
 #include <math.h>
+#include "calc.h"
 
 void calculaRaizFloat(float a, float b, float c) {
 
